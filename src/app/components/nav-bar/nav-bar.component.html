@@ -1,0 +1,113 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-xl d-flex">
+    <a class="navbar-brand" routerLink="/">
+      <img
+        src="../../../assets/logo-nav.png"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+      />
+    </a>
+
+    <!-- Icon menu chứa các navbar -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div
+      class="collapse navbar-collapse flex-grow-1"
+      id="navbarSupportedContent"
+    >
+      <ul class="navbar-nav align-items-center w-100">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/home"
+            >Home <span class="sr-only">(current)</span></a
+          >
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/products">Products</a>
+        </li>
+        <li
+          class="nav-item flex-grow-1 d-flex align-items-center justify-content-center"
+        >
+          <div class="dropdown w-50 search-dropdown">
+            <input
+              class="form-control form-control-sm mr-sm-2 w-100"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+              [formControl]="searchControl"
+            />
+            <div class="dropdown-menu w-100" [class.show]="showDropDown">
+              <a
+                class="dropdown-item"
+                *ngFor="let item of searchResults"
+                [href]="item.url"
+                target="_blank"
+                (click)="showDropDown = !showDropDown"
+                >{{ item.title }}</a
+              >
+            </div>
+          </div>
+        </li>
+
+        <li class="nav-item mr-3">
+          <a class="nav-link cart text-center" routerLink="/cart">
+            <i class="fas fa-shopping-cart text-white"></i>
+            <span class="cart-quantity text-warning font-weight-bold">{{
+              cartService.getCartQuantity()
+            }}</span>
+            <div class="cart-price text-white">
+              {{ cartService.getCartTotalPrice() | currency: "USD" }}
+            </div>
+          </a>
+        </li>
+
+        <li
+          class="nav-item ml-auto d-flex align-items-center"
+          *ngIf="!auth.isLoggedIn(); else profile"
+        >
+          <a class="nav-link" routerLink="/login"
+            ><i class="fas fa-sign-in-alt"></i> Login</a
+          >
+          <a class="nav-link" routerLink="/signup"
+            ><i class="fas fa-user-plus"></i> Signup</a
+          >
+        </li>
+
+        <ng-template #profile>
+          <li class="ml-auto">
+            <div class="dropdown user-dropdown">
+              <span class="dropdown-toggle" (click)="onToggle()"
+                ><img class="rounded-circle" 
+                [src]="auth.user.avatar" alt=""
+              /></span>
+              <div class="dropdown-menu" [class.show]="show">
+                <a class="dropdown-item" (click)="goToMyProfile()"
+                  >My profile</a
+                >
+                <a
+                  class="dropdown-item"
+                  *ngIf="auth.isAdmin()"
+                  (click)="goToAdminPage()"
+                  >Go to admin page</a
+                >
+                <a class="dropdown-item" (click)="onLogout()">
+                  <i class="fas fa-sign-out-alt"></i> Logout</a
+                >
+              </div>
+            </div>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>
